@@ -3,7 +3,7 @@
  *
  * This file is licensed under the MIT License. See the COPYING file.
  *
- * @author Dennis Blommesteijn <dennis.blommesteijn@surfsara.nl>
+ * @author Dennis Blommesteijn <dennis@blommesteijn.com>
  * @copyright Dennis Blommesteijn 2015
  */
 
