@@ -17,7 +17,6 @@ use OCP\AppFramework\Controller;
 
 class PageController extends Controller {
 
-
 	private $userId;
 
 	public function __construct($AppName, IRequest $request, $UserId){
@@ -46,6 +45,31 @@ class PageController extends Controller {
 	 */
 	public function doEcho($echo) {
 		return new DataResponse(['echo' => $echo]);
+	}
+
+	/**
+	 * Simply method that posts back the payload of the request
+	 * @NoAdminRequired
+	 */
+	public function publish(){
+		$param = $this->request->getParams();
+		if(!is_array($param)){
+			return new DataResponse(["error"=>"expected array"]);
+		}
+		if(!array_key_exists('id', $param)){
+			return new DataResponse(["error"=>"no `id` present"]);
+		}
+		$id = (int) $param['id'];
+		if(!is_int($id)){
+			return new DataResponse(["error"=>"expected integer"]);
+		}
+		// register transfer job
+		$job = new \OCA\MyApp\Transfer();
+		$userId = \OC::$server->getUserSession()->getUser()->getUID();
+		\OC::$server->getJobList()->add($job, ["file_id" => $id, "user_name" => $userId]);
+
+
+		return new DataResponse(["r" => print_r($job, true)]);
 	}
 
 
