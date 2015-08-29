@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+    <id>myapp</id>
+    <name>My App</name>
+    <description>My first ownCloud app</description>
+    <licence>MIT</licence>
+    <author>Dennis Blommesteijn</author>
+    <version>0.0.1</version>
+    <namespace>MyApp</namespace>
+    <category>other</category>
+    <dependencies>
+        <owncloud min-version="8.1" />
+    </dependencies>
+</info>
