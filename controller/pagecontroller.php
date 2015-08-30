@@ -63,13 +63,17 @@ class PageController extends Controller {
 		if(!is_int($id)){
 			return new DataResponse(["error"=>"expected integer"]);
 		}
-		// register transfer job
-		$job = new \OCA\MyApp\Transfer();
 		$userId = \OC::$server->getUserSession()->getUser()->getUID();
-		\OC::$server->getJobList()->add($job, ["file_id" => $id, "user_name" => $userId]);
+		if(strlen($userId) <= 0){
+			return new DataResponse(["error"=>"no `userId` present"]);
+		}
+		// create new publish job
+		$job = new \OCA\MyApp\Transfer();
+		// register transfer job
+		\OC::$server->getJobList()->add($job, ["fileId" => $id, "userId" => $userId]);
 
-
-		return new DataResponse(["r" => print_r($job, true)]);
+		// TODO: respond with success
+		return new DataResponse(["publish" => ["name" => ""]]);
 	}
 
 

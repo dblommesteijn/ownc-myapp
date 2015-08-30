@@ -24,6 +24,7 @@
                     // request publish of the selected file/ dir
                     $.post(url, data).success(function (response) {
                         console.log(response);
+                        // TODO: handle request here!
                     });
 
 
