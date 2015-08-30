@@ -11,9 +11,11 @@
 namespace OCA\MyApp\AppInfo;
 
 use OCP\AppFramework\App;
+use \OCA\MyApp\Db\AuthorMapper;
 
 $app = new App('myapp');
 $container = $app->getContainer();
+
 
 $container->query('OCP\INavigationManager')->add(function () use ($container) {
 	$urlGenerator = $container->query('OCP\IURLGenerator');
@@ -38,7 +40,6 @@ $container->query('OCP\INavigationManager')->add(function () use ($container) {
 		'name' => $l10n->t('My App'),
 	];
 });
-
 
 // register classes
 \OC::$CLASSPATH['OCA\MyApp\Transfer'] = 'myapp/lib/transfer.php';

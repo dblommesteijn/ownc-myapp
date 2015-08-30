@@ -50,6 +50,7 @@ style('files', 'files');
 							<th>ID</th>
 							<th>Filename</th>
 							<th>Status</ht>
+							<th>Publish Date</th>
 							<th>Last Update</th>
 						</tr>
 					</thead>
@@ -59,8 +60,9 @@ style('files', 'files');
 								<td><?php p($fileStatus->getId()) ?></td>
 								<td><?php p($fileStatus->getFilename()) ?></td>
 								<?php // TODO: echo as user specific timedate ?>
-								<td><?php p($fileStatus->getStatus()) ?> (UTC)</td>
-								<td><?php p($fileStatus->getUpdatedAt()) ?> (UTC)</td>
+								<td><?php p($fileStatus->getStatus()) ?></td>
+								<td><?php p($fileStatus->getCreatedAt()) ?></td>
+								<td><?php p($fileStatus->getUpdatedAt()) ?></td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>

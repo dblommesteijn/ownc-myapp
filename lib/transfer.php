@@ -2,10 +2,14 @@
 
 namespace OCA\MyApp;
 
+use OCA\MyApp\Db\FilecacheStatusMapper;
+use OCA\MyApp\Db\FilecacheStatus;
+
 
 class Transfer extends \OC\BackgroundJob\QueuedJob {
 
-    public function __construct(){
+    public function __construct(FilecacheStatusMapper $mapper){
+        $this->mapper = $mapper;
     }
 
     public function run($args){
@@ -30,7 +34,7 @@ class Transfer extends \OC\BackgroundJob\QueuedJob {
             return;
         } else {
             // child
-            self::forked(posix_getpid(), $args);
+            $this->forked(posix_getpid(), $args);
             die();
         }
         // TODO: we need to be carefull of zombies here!
@@ -57,9 +61,12 @@ class Transfer extends \OC\BackgroundJob\QueuedJob {
     /**
      * Run by child process (async)
      */
-    public static function forked($pid, $args){
+    public function forked($pid, $args){
         // get path of file
         // TODO: make sure the user can access the file
+        $fcStatus = $this->mapper->find($args['fileId']);
+        $fcStatus->setStatus("processing");
+        $this->mapper->update($fcStatus);
         \OC\Files\Filesystem::init($args['userId'], '/');
         $path = \OC\Files\Filesystem::getPath($args['fileId']);
         // detect failed lookups

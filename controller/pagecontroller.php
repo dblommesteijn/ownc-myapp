@@ -15,13 +15,17 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 
+use OCA\MyApp\Db\FilecacheStatusMapper;
+use OCA\MyApp\Db\FilecacheStatus;
+
 class PageController extends Controller {
 
 	private $userId;
 
-	public function __construct($AppName, IRequest $request, $UserId){
+	public function __construct($AppName, IRequest $request, $userId, FilecacheStatusMapper $mapper){
 		parent::__construct($AppName, $request);
-		$this->userId = $UserId;
+		$this->userId = $userId;
+		$this->mapper = $mapper;
 	}
 
 	/**
@@ -46,7 +50,24 @@ class PageController extends Controller {
 			}
 		}
 
+		// \OC\Files\Filesystem::init($this->userId, '/');
+
+
+		// $status = [];
+
 		$status = [];
+		foreach($this->mapper->findAll() as $file){
+			$status[] = $file;
+		}
+		//TODO: add filter
+
+		// $fcStatus = new FilecacheStatus();
+		// $fcStatus->setFileid(8);
+		// $fcStatus->setStatus("new");
+		// $this->mapper->insert($fcStatus);
+		// print_r($fcStatus)
+		// $fcStatus->setFileId($id);
+		// $fcStatus->setStatus("new");
 
 		// prepare variables
 		$params = [
@@ -79,6 +100,14 @@ class PageController extends Controller {
 		}
 		// create new publish job
 		$job = new \OCA\MyApp\Transfer();
+		$fcStatus = new FilecacheStatus();
+		$fcStatus->setFileid($id);
+		$fcStatus->setStatus("new");
+		$fcStatus->setCreatedAt(time());
+		$fcStatus->setUpdatedAt(time());
+		$this->mapper->insert($fcStatus);
+		//TODO: perhaps we should add a duplicate publish check here!
+
 		// register transfer job
 		\OC::$server->getJobList()->add($job, ["fileId" => $id, "userId" => $userId, "requestDate" => time()]);
 
