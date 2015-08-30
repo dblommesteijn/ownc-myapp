@@ -36,6 +36,27 @@ class Transfer extends \OC\BackgroundJob\QueuedJob {
         // TODO: we need to be carefull of zombies here!
     }
 
+    /**
+     * Check if current user is the requested user
+     */
+    public function isPublishingUser($userId){
+        return is_array($this->argument) &&
+            array_key_exists('userId', $this->argument) &&
+            $this->argument['userId'] == $userId;
+    }
+
+    public function getFilename(){
+        \OC\Files\Filesystem::init($this->argument['userId'], '/');
+        return \OC\Files\Filesystem::getPath($this->argument['fileId']);
+    }
+
+    public function getRequestDate(){
+        return $this->argument['requestDate'];
+    }
+
+    /**
+     * Run by child process (async)
+     */
     public static function forked($pid, $args){
         // get path of file
         // TODO: make sure the user can access the file

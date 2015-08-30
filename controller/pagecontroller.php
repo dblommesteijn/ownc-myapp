@@ -35,20 +35,30 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$params = ['user' => $this->userId];
+		$jobs = [];
+		foreach(\OC::$server->getJobList()->getAll() as $job){
+			// filter on Transfers
+			if($job instanceof \OCA\MyApp\Transfer){
+				// filter only own requested jobs
+				if($job->isPublishingUser($this->userId))
+					$jobs[] = $job;
+				// TODO: admin can view all publications
+			}
+		}
+
+		$status = [];
+
+		// prepare variables
+		$params = [
+			'user' => $this->userId,
+			'jobs' => $jobs,
+			'fileStatus' => $status
+		];
 		return new TemplateResponse('myapp', 'main', $params);  // templates/main.php
 	}
 
 	/**
-	 * Simply method that posts back the payload of the request
-	 * @NoAdminRequired
-	 */
-	public function doEcho($echo) {
-		return new DataResponse(['echo' => $echo]);
-	}
-
-	/**
-	 * Simply method that posts back the payload of the request
+	 * XHR request endpoint for getting publish command
 	 * @NoAdminRequired
 	 */
 	public function publish(){
@@ -70,11 +80,29 @@ class PageController extends Controller {
 		// create new publish job
 		$job = new \OCA\MyApp\Transfer();
 		// register transfer job
-		\OC::$server->getJobList()->add($job, ["fileId" => $id, "userId" => $userId]);
+		\OC::$server->getJobList()->add($job, ["fileId" => $id, "userId" => $userId, "requestDate" => time()]);
 
 		// TODO: respond with success
 		return new DataResponse(["publish" => ["name" => ""]]);
 	}
 
+	// /**
+	// * Page do view publication view
+	// * @NoAdminRequired
+	// * @NoCSRFRequired
+	// */
+	// public function publishQueue(){
+	// 	$params = [];
+	// 	// return new TemplateResponse('myapp', 'publishQueue', $params);
+	// 	return new TemplateResponse('myapp', 'publishQueue', $params);
+	// }
+
+	/**
+	 * Simply method that posts back the payload of the request
+	 * @NoAdminRequired
+	 */
+	public function doEcho($echo) {
+		return new DataResponse(['echo' => $echo]);
+	}
 
 }

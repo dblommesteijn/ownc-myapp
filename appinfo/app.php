@@ -40,10 +40,9 @@ $container->query('OCP\INavigationManager')->add(function () use ($container) {
 });
 
 
+// register classes
 \OC::$CLASSPATH['OCA\MyApp\Transfer'] = 'myapp/lib/transfer.php';
-
-// \OCP\Util::addScript('myapp', 'bower_components/font-awesome/');
 \OCP\Util::addScript('myapp', 'fileactions');
-
-// OCP\Util::addStyle('files', 'upload');
+// \OCP\Util::addScript('myapp', 'bootstrap.min');
+// \OCP\Util::addStyle('myapp', 'bootstrap');
 

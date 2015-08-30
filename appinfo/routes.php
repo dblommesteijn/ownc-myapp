@@ -19,7 +19,7 @@
 return [
     'routes' => [
 	   ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-	   ['name' => 'page#do_echo', 'url' => '/echo', 'verb' => 'POST'],
+	   // ['name' => 'page#do_echo', 'url' => '/echo', 'verb' => 'POST'],
 	   ['name' => 'page#publish', 'url' => '/publish', 'verb' => 'POST'],
     ]
 ];
